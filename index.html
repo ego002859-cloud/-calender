@@ -17,7 +17,7 @@
       --accent-color: #f59e0b;
       --accent-solid: #f59e0b;
       --card-active: linear-gradient(135deg, #f59e0b, #d97706);
-      --shadow-accent: 0 8px 20px rgba(245, 158, 11, 0.25);
+      --shadow-accent: 0 6px 16px rgba(245, 158, 11, 0.25);
     }
 
     /* 라임 그린 테마 */
@@ -25,7 +25,7 @@
       --accent-color: #ccff00;
       --accent-solid: #ccff00;
       --card-active: linear-gradient(135deg, #d4ff00, #a3e600);
-      --shadow-accent: 0 8px 20px rgba(204, 255, 0, 0.25);
+      --shadow-accent: 0 6px 16px rgba(204, 255, 0, 0.25);
     }
 
     * {
@@ -45,18 +45,18 @@
     }
 
     /* Header Navigation */
-    header { margin-bottom: 20px; }
+    header { margin-bottom: 16px; }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .icon-btn {
-      width: 40px; height: 40px;
-      border-radius: 14px;
+      width: 38px; height: 38px;
+      border-radius: 12px;
       background: var(--card-dark);
       border: 1px solid var(--border-color);
       display: flex; align-items: center; justify-content: center;
@@ -64,13 +64,13 @@
     }
 
     .month-title {
-      font-size: 1.15rem; font-weight: 800; color: var(--text-main);
-      display: flex; align-items: center; gap: 8px;
+      font-size: 1.1rem; font-weight: 800; color: var(--text-main);
+      display: flex; align-items: center; gap: 6px;
     }
 
     .month-nav-btn {
       background: none; border: none; color: var(--text-sub);
-      font-size: 1.1rem; cursor: pointer; padding: 4px 8px;
+      font-size: 1.05rem; cursor: pointer; padding: 2px 6px;
     }
 
     /* Theme Selector Bar */
@@ -81,12 +81,12 @@
       background: var(--card-dark);
       border: 1px solid var(--border-color);
       padding: 6px 12px;
-      border-radius: 16px;
-      margin-bottom: 16px;
+      border-radius: 14px;
+      margin-bottom: 14px;
     }
 
     .theme-title {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       color: var(--text-sub);
     }
@@ -97,8 +97,8 @@
     }
 
     .theme-dot {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid transparent;
@@ -110,38 +110,39 @@
 
     .theme-dot.active {
       border-color: #ffffff;
-      transform: scale(1.15);
+      transform: scale(1.12);
     }
 
-    /* Fixed 7-Day Weekly Grid */
+    /* Fixed 7-Day Weekly Grid (슬림 컴팩트 사이즈 조정) */
     .weekly-grid-container {
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .weekly-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
+      gap: 5px;
       width: 100%;
     }
 
+    /* 높이(80px -> 56px) 및 패딩/폰트 축소 */
     .week-pill {
-      height: 80px;
-      border-radius: 24px;
+      height: 56px;
+      border-radius: 16px;
       background: var(--card-dark);
       border: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 2px;
       cursor: pointer;
-      transition: all 0.25s ease;
-      padding: 4px 0;
+      transition: all 0.2s ease;
+      padding: 2px 0;
     }
 
-    .week-pill .day-num { font-size: 1.05rem; font-weight: 800; color: var(--text-main); }
-    .week-pill .day-name { font-size: 0.7rem; font-weight: 600; color: var(--text-sub); }
+    .week-pill .day-num { font-size: 0.95rem; font-weight: 800; color: var(--text-main); line-height: 1.1; }
+    .week-pill .day-name { font-size: 0.65rem; font-weight: 600; color: var(--text-sub); line-height: 1; }
 
     .week-pill.active {
       background: var(--card-active);
@@ -152,11 +153,11 @@
     .week-pill.active .day-num,
     .week-pill.active .day-name { color: var(--text-dark); }
 
-    /* Category Filter Chips Bar (가로 스크롤 및 동적 카테고리 지원) */
+    /* Category Filter Chips Bar */
     .filter-row {
       display: flex;
       gap: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       overflow-x: auto;
       padding-bottom: 4px;
       scrollbar-width: none;
@@ -164,12 +165,12 @@
     .filter-row::-webkit-scrollbar { display: none; }
 
     .filter-chip {
-      padding: 8px 16px; border-radius: 20px;
-      font-size: 0.78rem; font-weight: 700;
+      padding: 6px 14px; border-radius: 18px;
+      font-size: 0.75rem; font-weight: 700;
       background: var(--card-dark); border: 1px solid var(--border-color);
       color: var(--text-sub); cursor: pointer;
       white-space: nowrap; flex-shrink: 0;
-      display: flex; align-items: center; gap: 6px;
+      display: flex; align-items: center; gap: 4px;
     }
 
     .filter-chip.active {
@@ -184,21 +185,17 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
-    .filter-chip.add-chip:active {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .section-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; }
+    .section-title { font-size: 1.05rem; font-weight: 800; color: var(--text-main); margin-bottom: 14px; }
 
     /* Timeline */
-    .timeline { display: flex; flex-direction: column; gap: 14px; }
+    .timeline { display: flex; flex-direction: column; gap: 12px; }
 
     /* Full-Width Cards Styling */
     .schedule-card {
       width: 100%;
-      border-radius: 22px;
-      padding: 18px 20px;
-      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      border-radius: 20px;
+      padding: 16px 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
       cursor: pointer; transition: all 0.25s ease;
     }
 
@@ -216,7 +213,7 @@
       box-shadow: none;
     }
 
-    .card-content { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .card-content { display: flex; flex-direction: column; gap: 8px; flex: 1; }
 
     .card-top-meta {
       display: flex;
@@ -232,18 +229,18 @@
     }
 
     .tag {
-      font-size: 0.68rem; font-weight: 800;
-      padding: 4px 10px; border-radius: 8px; text-transform: uppercase;
+      font-size: 0.65rem; font-weight: 800;
+      padding: 3px 8px; border-radius: 6px; text-transform: uppercase;
       letter-spacing: 0.3px;
       background: rgba(255, 255, 255, 0.1);
       color: var(--text-main);
     }
 
     .time-badge-prominent {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: 800;
-      padding: 4px 12px;
-      border-radius: 10px;
+      padding: 3px 10px;
+      border-radius: 8px;
       letter-spacing: 0.3px;
       display: flex;
       align-items: center;
@@ -274,7 +271,7 @@
     }
 
     .plan-text {
-      font-size: 1.02rem; font-weight: 800; line-height: 1.4;
+      font-size: 0.98rem; font-weight: 800; line-height: 1.35;
     }
 
     .schedule-card.is-pending .plan-text { color: var(--text-dark); }
@@ -284,9 +281,9 @@
     }
 
     .check-pill {
-      width: 36px; height: 36px; border-radius: 50%;
+      width: 34px; height: 34px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 900;
+      font-size: 0.95rem; font-weight: 900;
       cursor: pointer; flex-shrink: 0; transition: all 0.2s;
     }
 
@@ -306,10 +303,10 @@
       width: 100%;
       background: rgba(255, 255, 255, 0.02);
       border: 2px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 22px;
-      padding: 18px;
+      border-radius: 20px;
+      padding: 16px;
       display: flex; align-items: center; justify-content: center; gap: 8px;
-      color: var(--text-sub); font-size: 0.9rem; font-weight: 700;
+      color: var(--text-sub); font-size: 0.88rem; font-weight: 700;
       cursor: pointer; transition: all 0.2s ease;
       margin-top: 6px;
     }
@@ -320,7 +317,7 @@
       color: var(--accent-color);
     }
 
-    .plus-icon { font-size: 1.3rem; font-weight: 300; line-height: 1; }
+    .plus-icon { font-size: 1.2rem; font-weight: 300; line-height: 1; }
 
     /* Bottom Action Toolbar */
     .toolbar {
@@ -332,15 +329,11 @@
     }
 
     .btn-tool {
-      flex: 1; padding: 12px 6px; border-radius: 14px;
+      flex: 1; padding: 10px 6px; border-radius: 12px;
       border: 1px solid var(--border-color); background: var(--card-dark);
       color: var(--text-main); font-size: 0.76rem; font-weight: 700; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 4px;
       transition: all 0.2s ease;
-    }
-
-    .btn-tool:active {
-      background: rgba(255, 255, 255, 0.08);
     }
 
     .btn-tool.clear-btn {
@@ -349,7 +342,7 @@
       background: rgba(239, 68, 68, 0.08);
     }
 
-    /* Edit Modal & Category Modal */
+    /* Modal Overlay */
     .modal-overlay {
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
@@ -359,51 +352,34 @@
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-box {
       background: #1a202c; border: 1px solid var(--border-color);
-      border-radius: 24px; width: 100%; max-width: 380px; padding: 22px;
+      border-radius: 22px; width: 100%; max-width: 380px; padding: 20px;
     }
-    .form-group { margin-bottom: 14px; }
-    .form-label { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 6px; }
+    .form-group { margin-bottom: 12px; }
+    .form-label { font-size: 0.72rem; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 4px; }
     .form-input, .form-select {
       width: 100%; background: var(--bg-color); border: 1px solid var(--border-color);
-      color: var(--text-main); padding: 12px; border-radius: 12px; font-size: 0.88rem; outline: none;
+      color: var(--text-main); padding: 10px 12px; border-radius: 10px; font-size: 0.85rem; outline: none;
     }
 
     .time-picker-row { display: flex; align-items: center; gap: 8px; }
-    .time-picker-divider { color: var(--text-sub); font-weight: 800; font-size: 0.9rem; }
+    .time-picker-divider { color: var(--text-sub); font-weight: 800; font-size: 0.85rem; }
 
-    .btn-primary { width: 100%; background: var(--accent-solid); color: var(--text-dark); border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; }
-    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+    .btn-primary { width: 100%; background: var(--accent-solid); color: var(--text-dark); border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
-    /* Category Item List in Delete Modal */
     .cat-manage-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 180px;
-      overflow-y: auto;
-      margin-bottom: 16px;
+      display: flex; flex-direction: column; gap: 8px;
+      max-height: 160px; overflow-y: auto; margin-bottom: 14px;
     }
 
     .cat-manage-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg-color);
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      font-size: 0.85rem;
-      font-weight: 700;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--bg-color); padding: 8px 12px;
+      border-radius: 10px; border: 1px solid var(--border-color);
+      font-size: 0.82rem; font-weight: 700;
     }
 
-    .cat-del-btn {
-      color: #f87171;
-      background: none;
-      border: none;
-      font-size: 0.8rem;
-      cursor: pointer;
-      font-weight: 700;
-    }
+    .cat-del-btn { color: #f87171; background: none; border: none; font-size: 0.78rem; cursor: pointer; font-weight: 700; }
   </style>
 </head>
 <body class="theme-orange">
@@ -428,12 +404,12 @@
       </div>
     </div>
 
-    <!-- 주간 고정 캘린더 -->
+    <!-- 주간 고정 캘린더 (슬림 컴팩트 디자인) -->
     <div class="weekly-grid-container">
       <div class="weekly-grid" id="weeklyGrid"></div>
     </div>
 
-    <!-- 동적 카테고리 필터 바 (전체/공통 제거, +추가 버튼 내장) -->
+    <!-- 동적 카테고리 필터 바 -->
     <div class="filter-row" id="filterRow"></div>
   </header>
 
@@ -456,7 +432,7 @@
   <!-- Schedule Edit / Add Modal -->
   <div class="modal-overlay" id="editModal">
     <div class="modal-box">
-      <h3 style="margin-bottom: 16px; font-size:1.1rem; font-weight:800;" id="modalTitle">일정 관리</h3>
+      <h3 style="margin-bottom: 14px; font-size:1.05rem; font-weight:800;" id="modalTitle">일정 관리</h3>
       
       <div class="form-group">
         <label class="form-label">시간 설정 (시작 ~ 종료)</label>
@@ -479,9 +455,9 @@
         <label class="form-label">실행 메모 (선택사항)</label>
         <input type="text" class="form-input" id="modalActual" placeholder="수정 사항 또는 실행 메모">
       </div>
-      <div style="display:flex; gap:8px; margin-top:20px;">
+      <div style="display:flex; gap:8px; margin-top:16px;">
         <button class="btn-danger" id="btnDelete" onclick="deleteSchedule()" style="display:none;">삭제</button>
-        <button style="flex:1; background:transparent; border:1px solid var(--border-color); color:var(--text-sub); border-radius:12px; font-weight:700;" onclick="closeModal()">취소</button>
+        <button style="flex:1; background:transparent; border:1px solid var(--border-color); color:var(--text-sub); border-radius:10px; font-weight:700;" onclick="closeModal()">취소</button>
         <button class="btn-primary" style="flex:2;" onclick="saveModal()">저장하기</button>
       </div>
     </div>
@@ -490,18 +466,18 @@
   <!-- Category Add/Manage Modal -->
   <div class="modal-overlay" id="categoryModal">
     <div class="modal-box">
-      <h3 style="margin-bottom: 16px; font-size:1.1rem; font-weight:800;">카테고리 관리</h3>
+      <h3 style="margin-bottom: 14px; font-size:1.05rem; font-weight:800;">카테고리 관리</h3>
       
       <div class="form-group">
         <label class="form-label">새 카테고리 이름</label>
         <input type="text" class="form-input" id="newCatInput" placeholder="예: 외주편집, 개인운동 등">
       </div>
-      <button class="btn-primary" style="margin-bottom: 18px;" onclick="addCategory()">+ 카테고리 추가</button>
+      <button class="btn-primary" style="margin-bottom: 16px;" onclick="addCategory()">+ 카테고리 추가</button>
 
       <label class="form-label">등록된 카테고리 목록</label>
       <div class="cat-manage-list" id="catManageList"></div>
 
-      <button style="width:100%; background:transparent; border:1px solid var(--border-color); color:var(--text-sub); border-radius:12px; padding:12px; font-weight:700;" onclick="closeCatModal()">닫기</button>
+      <button style="width:100%; background:transparent; border:1px solid var(--border-color); color:var(--text-sub); border-radius:10px; padding:10px; font-weight:700;" onclick="closeCatModal()">닫기</button>
     </div>
   </div>
 
@@ -537,10 +513,8 @@
 
     let selectedDate = new Date();
     let dbData = JSON.parse(localStorage.getItem('dualtrack_clean_empty_db')) || {};
-    
-    // 기본 카테고리 (전체/공통 제외, 문화부와 acut 기본 제공)
     let userCategories = JSON.parse(localStorage.getItem('dualtrack_custom_cats')) || ['문화부', 'acut'];
-    let currentFilter = userCategories[0] || '문화부'; // 첫 번째 카테고리를 기본 선택
+    let currentFilter = userCategories[0] || '문화부';
 
     let editingSlotKey = null;
     let isCreatingNew = false;
@@ -576,12 +550,10 @@
       localStorage.setItem('dualtrack_custom_cats', JSON.stringify(userCategories));
     }
 
-    /* 동적 카테고리 필터 바 및 일정 추가 모달 연동 */
     function renderCategoryFilterBar() {
       const filterContainer = document.getElementById('filterRow');
       filterContainer.innerHTML = '';
 
-      // 선택된 필터가 더 이상 존재하지 않으면 첫 번째 카테고리로 변경
       if (!userCategories.includes(currentFilter) && userCategories.length > 0) {
         currentFilter = userCategories[0];
       }
@@ -598,14 +570,12 @@
         filterContainer.appendChild(btn);
       });
 
-      // + 추가 버튼 (필터 바 맨 우측)
       const addBtn = document.createElement('button');
       addBtn.className = 'filter-chip add-chip';
       addBtn.innerHTML = '<span>+ 추가</span>';
       addBtn.onclick = openCatModal;
       filterContainer.appendChild(addBtn);
 
-      // 일정 추가 모달 드롭다운 항목 채우기
       const selectModal = document.getElementById('modalCategory');
       selectModal.innerHTML = '';
       userCategories.forEach(cat => {
@@ -616,7 +586,6 @@
       });
     }
 
-    /* 카테고리 추가/삭제 모달 로직 */
     function openCatModal() {
       renderCatManageList();
       document.getElementById('categoryModal').classList.add('active');
@@ -656,7 +625,7 @@
       userCategories.push(val);
       saveCategories();
       input.value = '';
-      currentFilter = val; // 새로 추가한 카테고리로 즉시 전환
+      currentFilter = val;
       renderCatManageList();
       renderCategoryFilterBar();
       renderTimeline();
@@ -728,14 +697,13 @@
 
       const sortedTimes = Object.keys(dayData).sort();
 
-      // 필터링 적용
       const filteredKeys = sortedTimes.filter(key => {
         return dayData[key].category === currentFilter;
       });
 
       if (filteredKeys.length === 0) {
         container.innerHTML = `
-          <div style="text-align:center; padding: 45px 16px; color:var(--text-sub); font-size:0.88rem; background:var(--card-dark); border-radius:22px; border:1px dashed var(--border-color);">
+          <div style="text-align:center; padding: 40px 16px; color:var(--text-sub); font-size:0.85rem; background:var(--card-dark); border-radius:20px; border:1px dashed var(--border-color);">
             '${currentFilter}' 카테고리에 등록된 일정이 없습니다.<br>하단의 <b style="color:var(--accent-color);">'+ 새 일정 추가하기'</b> 버튼을 눌러 추가해보세요!
           </div>
         `;
