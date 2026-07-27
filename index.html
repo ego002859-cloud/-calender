@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>DualTrack Multi-Theme Tracker</title>
+  <style>
+    :root {
+      --bg-color: #0c0f17;
+      --card-dark: #161b26;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --text-dark: #0f172a;
+      --munhwa-color: #3b82f6;
+      --acut-color: #ea580c;
+      --common-color: #a855f7;
+      --border-color: rgba(255, 255, 255, 0.1);
+
+      /* 기본 테마: 오렌지 / 골드 */
+      --accent-color: #f59e0b;
+      --accent-solid: #f59e0b;
+      --card-active: linear-gradient(135deg, #f59e0b, #d97706);
+      --shadow-accent: 0 8px 20px rgba(245, 158, 11, 0.25);
+    }
+
+    /* 라임 그린 테마 레퍼런스 스타일 */
+    body.theme-green {
+      --accent-color: #ccff00;
+      --accent-solid: #ccff00;
+      --card-active: linear-gradient(135deg, #d4ff00, #a3e600);
+      --shadow-accent: 0 8px 20px rgba(204, 255, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 16px 16px 80px 16px;
+      max-width: 480px;
+      margin: 0 auto;
+      transition: background 0.3s;
+    }
+
+    /* Header Navigation */
+    header { margin-bottom: 20px; }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 14px;
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-main); font-weight: bold; cursor: pointer;
+    }
+
+    .month-title {
+      font-size: 1.15rem; font-weight: 800; color: var(--text-main);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .month-nav-btn {
+      background: none; border: none; color: var(--text-sub);
+      font-size: 1.1rem; cursor: pointer; padding: 4px 8px;
+    }
+
+    /* Theme Selector Bar */
+    .theme-selector-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 16px;
+      margin-bottom: 16px;
+    }
+
+    .theme-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-sub);
+    }
+
+    .theme-options {
+      display: flex;
+      gap: 8px;
+    }
+
+    .theme-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .theme-dot.orange { background: #f59e0b; }
+    .theme-dot.green { background: #ccff00; }
+
+    .theme-dot.active {
+      border-color: #ffffff;
+      transform: scale(1.15);
+    }
+
+    /* Fixed 7-Day Weekly Grid */
+    .weekly-grid-container {
+      margin-bottom: 20px;
+    }
+
+    .weekly-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      width: 100%;
+    }
+
+    .week-pill {
+      height: 80px;
+      border-radius: 24px;
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      padding: 4px 0;
+    }
+
+    .week-pill .day-num { font-size: 1.05rem; font-weight: 800; color: var(--text-main); }
+    .week-pill .day-name { font-size: 0.7rem; font-weight: 600; color: var(--text-sub); }
+
+    .week-pill.active {
+      background: var(--card-active);
+      border-color: transparent;
+      box-shadow: var(--shadow-accent);
+    }
+
+    .week-pill.active .day-num,
+    .week-pill.active .day-name { color: var(--text-dark); }
+
+    /* Category Filter Chips */
+    .filter-row { display: flex; gap: 8px; margin-bottom: 20px; }
+
+    .filter-chip {
+      padding: 8px 16px; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700;
+      background: var(--card-dark); border: 1px solid var(--border-color);
+      color: var(--text-sub); cursor: pointer;
+    }
+
+    .filter-chip.active {
+      background: var(--accent-color);
+      color: var(--text-dark);
+      border-color: var(--accent-color);
+    }
+
+    .section-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-bottom: 16px; }
+
+    /* Timeline */
+    .timeline { display: flex; flex-direction: column; gap: 14px; }
+
+    /* Full-Width Cards Styling */
+    .schedule-card {
+      width: 100%;
+      border-radius: 22px;
+      padding: 18px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      cursor: pointer; transition: all 0.25s ease;
+    }
+
+    .schedule-card.is-pending {
+      background: var(--card-active);
+      border: none;
+      color: var(--text-dark);
+      box-shadow: var(--shadow-accent);
+    }
+
+    .schedule-card.is-completed {
+      background: var(--card-dark);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      box-shadow: none;
+    }
+
+    .card-content { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+    .card-top-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.68rem; font-weight: 800;
+      padding: 4px 10px; border-radius: 8px; text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .time-badge-prominent {
+      font-size: 0.88rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 10px;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* 할 일(액티브 컬러)일 때 배지 디자인 */
+    .schedule-card.is-pending .tag {
+      background: rgba(15, 23, 42, 0.18);
+      color: var(--text-dark);
+    }
+
+    .schedule-card.is-pending .time-badge-prominent {
+      background: #0f172a;
+      color: var(--accent-color);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    /* 완료(검은 배경)일 때 배지 디자인 */
+    .schedule-card.is-completed .tag-문화부 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .schedule-card.is-completed .tag-acut { background: rgba(249, 115, 22, 0.2); color: #fb923c; }
+    .schedule-card.is-completed .tag-공통 { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+
+    .schedule-card.is-completed .time-badge-prominent {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--accent-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .plan-text {
+      font-size: 1.02rem; font-weight: 800; line-height: 1.4;
+    }
+
+    .schedule-card.is-pending .plan-text { color: var(--text-dark); }
+    .schedule-card.is-completed .plan-text {
+      color: var(--text-sub);
+      text-decoration: line-through;
+    }
+
+    /* Check Pill Button */
+    .check-pill {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 900;
+      cursor: pointer; flex-shrink: 0; transition: all 0.2s;
+    }
+
+    .schedule-card.is-pending .check-pill {
+      border: 2px solid rgba(15, 23, 42, 0.35);
+      background: transparent;
+      color: transparent;
+    }
+
+    .schedule-card.is-completed .check-pill {
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-color);
+    }
+
+    /* 맨 아래 옅은 '+' 일정 추가 카드 */
+    .add-schedule-card {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.02);
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 22px;
+      padding: 18px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      color: var(--text-sub); font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; transition: all 0.2s ease;
+      margin-top: 6px;
+    }
+
+    .add-schedule-card:active {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .plus-icon { font-size: 1.3rem; font-weight: 300; line-height: 1; }
+
+    /* Bottom Action Toolbar */
+    .toolbar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(12, 15, 23, 0.9); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-color); padding: 12px 20px;
+      display: flex; gap: 10px; max-width: 480px; margin: 0 auto;
+    }
+
+    .btn-tool {
+      flex: 1; padding: 12px; border-radius: 14px;
+      border: 1px solid var(--border-color); background: var(--card-dark);
+      color: var(--text-main); font-size: 0.8rem; font-weight: 700; cursor: pointer;
+    }
+
+    /* Edit Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px; opacity: 0; pointer-events: none; transition: 0.2s; z-index: 100;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-box {
+      background: #1a202c; border: 1px solid var(--border-color);
+      border-radius: 24px; width: 100%; max-width: 380px; padding: 22px;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 6px; }
+    .form-input, .form-select {
+      width: 100%; background: var(--bg-color); border: 1px solid var(--border-color);
+      color: var(--text-main); padding: 12px; border-radius: 12px; font-size: 0.88rem; outline: none;
+    }
+
+    .time-picker-row { display: flex; align-items: center; gap: 8px; }
+    .time-picker-divider { color: var(--text-sub); font-weight: 800; font-size: 0.9rem; }
+
+    .btn-primary { width: 100%; background: var(--accent-solid); color: var(--text-dark); border: none; padding: 14px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; }
+  </style>
+</head>
+<body class="theme-orange">
+
+  <header>
+    <div class="top-bar">
+      <div class="icon-btn">❮</div>
+      <div class="month-title">
+        <button class="month-nav-btn" onclick="changeWeek(-1)">❮</button>
+        <span id="monthYearLabel">2026.07</span>
+        <button class="month-nav-btn" onclick="changeWeek(1)">❯</button>
+      </div>
+      <div class="icon-btn">👤</div>
+    </div>
+
+    <!-- Theme Switcher -->
+    <div class="theme-selector-bar">
+      <span class="theme-title">테마 컬러 선택</span>
+      <div class="theme-options">
+        <div class="theme-dot orange active" title="오렌지/골드" onclick="switchTheme('orange')"></div>
+        <div class="theme-dot green" title="라임 그린" onclick="switchTheme('green')"></div>
+      </div>
+    </div>
+
+    <!-- 주간 고정 캘린더 -->
+    <div class="weekly-grid-container">
+      <div class="weekly-grid" id="weeklyGrid"></div>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="setFilter('all', this)">전체</button>
+      <button class="filter-chip" onclick="setFilter('문화부', this)">문화부만</button>
+      <button class="filter-chip" onclick="setFilter('acut', this)">acut만</button>
+    </div>
+  </header>
+
+  <div class="section-title">일정 (Schedule)</div>
+
+  <div class="timeline" id="timelineContainer"></div>
+
+  <!-- 맨 아래 옅은 '+' 일정 추가 카드 -->
+  <div class="add-schedule-card" onclick="openNewScheduleModal()">
+    <span class="plus-icon">+</span>
+    <span>새 일정 추가하기</span>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn-tool" onclick="resetPreset()">⚡ 기본 루틴 불러오기</button>
+    <button class="btn-tool" onclick="exportData()">💾 백업</button>
+  </div>
+
+  <!-- Edit / Add Modal -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-box">
+      <h3 style="margin-bottom: 16px; font-size:1.1rem; font-weight:800;" id="modalTitle">일정 관리</h3>
+      
+      <div class="form-group">
+        <label class="form-label">시간 설정 (시작 ~ 종료)</label>
+        <div class="time-picker-row">
+          <select class="form-select" id="modalStartTime"></select>
+          <span class="time-picker-divider">~</span>
+          <select class="form-select" id="modalEndTime"></select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">업무 분류</label>
+        <select class="form-select" id="modalCategory">
+          <option value="문화부">문화부</option>
+          <option value="acut">acut</option>
+          <option value="공통">공통</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">계획 (Plan)</label>
+        <input type="text" class="form-input" id="modalPlan" placeholder="계획 내용 입력">
+      </div>
+      <div class="form-group">
+        <label class="form-label">실행 메모 (선택사항)</label>
+        <input type="text" class="form-input" id="modalActual" placeholder="수정 사항 또는 실행 메모">
+      </div>
+      <div style="display:flex; gap:8px; margin-top:20px;">
+        <button class="btn-danger" id="btnDelete" onclick="deleteSchedule()" style="display:none;">삭제</button>
+        <button style="flex:1; background:transparent; border:1px solid var(--border-color); color:var(--text-sub); border-radius:12px; font-weight:700;" onclick="closeModal()">취소</button>
+        <button class="btn-primary" style="flex:2;" onclick="saveModal()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generate30MinOptions() {
+      const times = [];
+      for (let h = 0; h < 24; h++) {
+        const hh = String(h).padStart(2, '0');
+        times.push(`${hh}:00`);
+        times.push(`${hh}:30`);
+      }
+      return times;
+    }
+
+    const TIME_OPTIONS = generate30MinOptions();
+
+    function populateTimeSelects() {
+      const startSelect = document.getElementById('modalStartTime');
+      const endSelect = document.getElementById('modalEndTime');
+      startSelect.innerHTML = '';
+      endSelect.innerHTML = '';
+
+      TIME_OPTIONS.forEach(t => {
+        const opt1 = document.createElement('option');
+        opt1.value = t; opt1.innerText = t;
+        startSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = t; opt2.innerText = t;
+        endSelect.appendChild(opt2);
+      });
+    }
+
+    const DEFAULT_PRESET = {
+      "09:00 - 10:00": { startTime: "09:00", endTime: "10:00", category: "문화부", plan: "전도부 - 오전전도대", actual: "전도대 후 영상 공유", done: true },
+      "10:00 - 11:00": { startTime: "10:00", endTime: "11:00", category: "문화부", plan: "부서 회의 및 예산안 검토", actual: "", done: false },
+      "11:00 - 12:00": { startTime: "11:00", endTime: "12:00", category: "acut", plan: "영상 컷편집 및 레퍼런스 수집", actual: "", done: true },
+      "12:00 - 13:00": { startTime: "12:00", endTime: "13:00", category: "공통", plan: "점심 식사 및 휴식", actual: "", done: true },
+      "13:00 - 14:00": { startTime: "13:00", endTime: "14:00", category: "문화부", plan: "보도자료 및 외주 피드백 검토", actual: "", done: false },
+      "14:00 - 15:00": { startTime: "14:00", endTime: "15:00", category: "acut", plan: "유튜브 썸네일 카피라이팅 작성", actual: "", done: false },
+      "15:00 - 16:00": { startTime: "15:00", endTime: "16:00", category: "acut", plan: "채널 가이드라인 및 로드맵 정립", actual: "", done: false },
+      "16:00 - 17:00": { startTime: "16:00", endTime: "17:00", category: "문화부", plan: "일일 결재 처리 및 공유 문서 정리", actual: "", done: false },
+      "17:00 - 18:00": { startTime: "17:00", endTime: "18:00", category: "acut", plan: "영상 스크립트 작성 및 톤앤매너 점검", actual: "", done: false }
+    };
+
+    let selectedDate = new Date();
+    let dbData = JSON.parse(localStorage.getItem('dualtrack_prominent_time_db')) || {};
+    let currentFilter = 'all';
+    let editingSlotKey = null;
+    let isCreatingNew = false;
+    let currentTheme = localStorage.getItem('dualtrack_theme') || 'orange';
+
+    function getFormattedDate(dateObj) {
+      const yyyy = dateObj.getFullYear();
+      const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const dd = String(dateObj.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function getMonday(d) {
+      const date = new Date(d);
+      const day = date.getDay();
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+      return new Date(date.setDate(diff));
+    }
+
+    function init() {
+      applyTheme(currentTheme);
+      populateTimeSelects();
+      renderWeeklyGrid();
+      const dateStr = getFormattedDate(selectedDate);
+      if (!dbData[dateStr]) dbData[dateStr] = JSON.parse(JSON.stringify(DEFAULT_PRESET));
+      renderTimeline();
+    }
+
+    function switchTheme(themeName) {
+      currentTheme = themeName;
+      localStorage.setItem('dualtrack_theme', themeName);
+      applyTheme(themeName);
+      renderTimeline();
+    }
+
+    function applyTheme(themeName) {
+      document.body.className = themeName === 'green' ? 'theme-green' : 'theme-orange';
+      document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active'));
+      const activeDot = document.querySelector(`.theme-dot.${themeName}`);
+      if (activeDot) activeDot.classList.add('active');
+    }
+
+    function save() {
+      localStorage.setItem('dualtrack_prominent_time_db', JSON.stringify(dbData));
+    }
+
+    function renderWeeklyGrid() {
+      const container = document.getElementById('weeklyGrid');
+      container.innerHTML = '';
+
+      const monday = getMonday(selectedDate);
+      document.getElementById('monthYearLabel').innerText = `${selectedDate.getFullYear()}.${String(selectedDate.getMonth() + 1).padStart(2, '0')}`;
+
+      const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
+
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(monday);
+        d.setDate(monday.getDate() + i);
+
+        const isCurrent = getFormattedDate(d) === getFormattedDate(selectedDate);
+
+        const pill = document.createElement('div');
+        pill.className = `week-pill ${isCurrent ? 'active' : ''}`;
+        pill.onclick = () => {
+          selectedDate = d;
+          init();
+        };
+
+        pill.innerHTML = `
+          <span class="day-num">${d.getDate()}</span>
+          <span class="day-name">${daysOfWeek[i]}</span>
+        `;
+        container.appendChild(pill);
+      }
+    }
+
+    function renderTimeline() {
+      const container = document.getElementById('timelineContainer');
+      container.innerHTML = '';
+      const dateStr = getFormattedDate(selectedDate);
+      const dayData = dbData[dateStr] || {};
+
+      const sortedTimes = Object.keys(dayData).sort();
+
+      sortedTimes.forEach(key => {
+        const slot = dayData[key];
+        if (currentFilter !== 'all' && slot.category !== currentFilter && slot.category !== '공통') return;
+
+        const stateClass = slot.done ? 'is-completed' : 'is-pending';
+        const displayTime = slot.startTime && slot.endTime ? `${slot.startTime} - ${slot.endTime}` : key;
+
+        const card = document.createElement('div');
+        card.className = `schedule-card ${stateClass}`;
+        card.onclick = () => openEditModal(key);
+
+        card.innerHTML = `
+          <div class="card-content">
+            <div class="card-top-meta">
+              <div class="meta-left">
+                <span class="tag tag-${slot.category}">${slot.category}</span>
+              </div>
+              <span class="time-badge-prominent">⏱ ${displayTime}</span>
+            </div>
+            <div class="plan-text">${slot.plan || '계획 없음'}</div>
+            ${slot.actual ? `<div style="font-size:0.78rem; opacity:0.85;">📝 ${slot.actual}</div>` : ''}
+          </div>
+          <button class="check-pill" onclick="event.stopPropagation(); toggleDone('${key}')">✓</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleDone(key) {
+      const dateStr = getFormattedDate(selectedDate);
+      dbData[dateStr][key].done = !dbData[dateStr][key].done;
+      save();
+      renderTimeline();
+    }
+
+    function openNewScheduleModal() {
+      isCreatingNew = true;
+      editingSlotKey = null;
+      document.getElementById('modalTitle').innerText = '새 일정 추가';
+      document.getElementById('modalStartTime').value = '19:00';
+      document.getElementById('modalEndTime').value = '20:00';
+      document.getElementById('modalCategory').value = 'acut';
+      document.getElementById('modalPlan').value = '';
+      document.getElementById('modalActual').value = '';
+      document.getElementById('btnDelete').style.display = 'none';
+      document.getElementById('editModal').classList.add('active');
+    }
+
+    function openEditModal(key) {
+      isCreatingNew = false;
+      editingSlotKey = key;
+      const dateStr = getFormattedDate(selectedDate);
+      const slot = dbData[dateStr][key];
+
+      document.getElementById('modalTitle').innerText = `일정 수정`;
+      document.getElementById('modalStartTime').value = slot.startTime || '09:00';
+      document.getElementById('modalEndTime').value = slot.endTime || '10:00';
+      document.getElementById('modalCategory').value = slot.category;
+      document.getElementById('modalPlan').value = slot.plan;
+      document.getElementById('modalActual').value = slot.actual || '';
+      document.getElementById('btnDelete').style.display = 'block';
+      document.getElementById('editModal').classList.add('active');
+    }
+
+    function closeModal() { document.getElementById('editModal').classList.remove('active'); }
+
+    function saveModal() {
+      const dateStr = getFormattedDate(selectedDate);
+      const startTime = document.getElementById('modalStartTime').value;
+      const endTime = document.getElementById('modalEndTime').value;
+      const catVal = document.getElementById('modalCategory').value;
+      const planVal = document.getElementById('modalPlan').value.trim();
+      const actualVal = document.getElementById('modalActual').value.trim();
+
+      if (startTime >= endTime) {
+        alert('종료 시간은 시작 시간보다 뒤여야 합니다.');
+        return;
+      }
+
+      if (!planVal) {
+        alert('계획 내용을 입력해주세요.');
+        return;
+      }
+
+      const key = `${startTime} - ${endTime}`;
+
+      if (isCreatingNew) {
+        dbData[dateStr][key] = {
+          startTime: startTime,
+          endTime: endTime,
+          category: catVal,
+          plan: planVal,
+          actual: actualVal,
+          done: false
+        };
+      } else {
+        const oldData = dbData[dateStr][editingSlotKey];
+        if (editingSlotKey !== key) {
+          delete dbData[dateStr][editingSlotKey];
+        }
+        dbData[dateStr][key] = {
+          startTime: startTime,
+          endTime: endTime,
+          category: catVal,
+          plan: planVal,
+          actual: actualVal,
+          done: oldData ? oldData.done : false
+        };
+      }
+
+      save();
+      closeModal();
+      renderTimeline();
+    }
+
+    function deleteSchedule() {
+      if (!editingSlotKey) return;
+      if (confirm('이 일정을 삭제하시겠습니까?')) {
+        const dateStr = getFormattedDate(selectedDate);
+        delete dbData[dateStr][editingSlotKey];
+        save();
+        closeModal();
+        renderTimeline();
+      }
+    }
+
+    function setFilter(cat, btn) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTimeline();
+    }
+
+    function changeWeek(offset) {
+      selectedDate.setDate(selectedDate.getDate() + (offset * 7));
+      init();
+    }
+
+    function resetPreset() {
+      const dateStr = getFormattedDate(selectedDate);
+      if (confirm('현재 날짜의 일정을 기본 루틴으로 초기화하시겠습니까?')) {
+        dbData[dateStr] = JSON.parse(JSON.stringify(DEFAULT_PRESET));
+        save();
+        renderTimeline();
+      }
+    }
+
+    function exportData() {
+      const dateStr = getFormattedDate(selectedDate);
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dbData, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `multi_theme_tracker_${dateStr}.json`;
+      a.click();
+    }
+
+    init();
+  </script>
+</body>
+</html>
