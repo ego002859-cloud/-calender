@@ -360,8 +360,12 @@
       color: var(--text-main); padding: 10px 12px; border-radius: 10px; font-size: 0.85rem; outline: none;
     }
 
-    .time-picker-row { display: flex; align-items: center; gap: 8px; }
-    .time-picker-divider { color: var(--text-sub); font-weight: 800; font-size: 0.85rem; }
+    /* 시간/분 개별 모듈 스타일 */
+    .time-picker-block { display: flex; flex-direction: column; gap: 6px; }
+    .time-picker-row { display: flex; align-items: center; gap: 4px; }
+    .time-select-unit { flex: 1; padding: 8px 4px; text-align: center; }
+    .time-colon { color: var(--text-sub); font-weight: 800; font-size: 0.9rem; }
+    .time-picker-divider { color: var(--text-sub); font-weight: 800; font-size: 0.9rem; text-align: center; margin: 4px 0; }
 
     .btn-primary { width: 100%; background: var(--accent-solid); color: var(--text-dark); border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; }
     .btn-danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 10px; font-weight: 700; cursor: pointer; }
@@ -434,11 +438,25 @@
       <h3 style="margin-bottom: 14px; font-size:1.05rem; font-weight:800;" id="modalTitle">일정 관리</h3>
       
       <div class="form-group">
-        <label class="form-label">시간 설정 (시작 ~ 종료)</label>
-        <div class="time-picker-row">
-          <select class="form-select" id="modalStartTime"></select>
-          <span class="time-picker-divider">~</span>
-          <select class="form-select" id="modalEndTime"></select>
+        <label class="form-label">시간 설정</label>
+        <div class="time-picker-block">
+          <!-- 시작 시간 (시, 분) -->
+          <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:2px;">시작 시간</div>
+          <div class="time-picker-row">
+            <select class="form-select time-select-unit" id="modalStartHour"></select>
+            <span class="time-colon">:</span>
+            <select class="form-select time-select-unit" id="modalStartMin"></select>
+          </div>
+          
+          <div class="time-picker-divider">~</div>
+          
+          <!-- 종료 시간 (시, 분) -->
+          <div style="font-size:0.7rem; color:var(--text-sub); margin-bottom:2px;">종료 시간</div>
+          <div class="time-picker-row">
+            <select class="form-select time-select-unit" id="modalEndHour"></select>
+            <span class="time-colon">:</span>
+            <select class="form-select time-select-unit" id="modalEndMin"></select>
+          </div>
         </div>
       </div>
 
@@ -481,39 +499,35 @@
   </div>
 
   <script>
-    function generate30MinOptions() {
-      const times = [];
+    // 시(00~23), 분(00~59) 옵션 생성 함수
+    function populateTimeSelects() {
+      const startHour = document.getElementById('modalStartHour');
+      const startMin = document.getElementById('modalStartMin');
+      const endHour = document.getElementById('modalEndHour');
+      const endMin = document.getElementById('modalEndMin');
+
+      startHour.innerHTML = ''; startMin.innerHTML = '';
+      endHour.innerHTML = ''; endMin.innerHTML = '';
+
+      // 시 (00~23)
       for (let h = 0; h < 24; h++) {
         const hh = String(h).padStart(2, '0');
-        times.push(`${hh}:00`);
-        times.push(`${hh}:30`);
+        startHour.appendChild(new Option(`${hh}시`, hh));
+        endHour.appendChild(new Option(`${hh}시`, hh));
       }
-      return times;
-    }
 
-    const TIME_OPTIONS = generate30MinOptions();
-
-    function populateTimeSelects() {
-      const startSelect = document.getElementById('modalStartTime');
-      const endSelect = document.getElementById('modalEndTime');
-      startSelect.innerHTML = '';
-      endSelect.innerHTML = '';
-
-      TIME_OPTIONS.forEach(t => {
-        const opt1 = document.createElement('option');
-        opt1.value = t; opt1.innerText = t;
-        startSelect.appendChild(opt1);
-
-        const opt2 = document.createElement('option');
-        opt2.value = t; opt2.innerText = t;
-        endSelect.appendChild(opt2);
-      });
+      // 분 (00~59)
+      for (let m = 0; m < 60; m++) {
+        const mm = String(m).padStart(2, '0');
+        startMin.appendChild(new Option(`${mm}분`, mm));
+        endMin.appendChild(new Option(`${mm}분`, mm));
+      }
     }
 
     let selectedDate = new Date();
     let dbData = JSON.parse(localStorage.getItem('dualtrack_clean_empty_db')) || {};
     let userCategories = JSON.parse(localStorage.getItem('dualtrack_custom_cats')) || ['문화부', 'acut'];
-    let currentFilter = '전체'; // 기본적으로 '전체' 보기 선택
+    let currentFilter = '전체';
 
     let editingSlotKey = null;
     let isCreatingNew = false;
@@ -549,12 +563,10 @@
       localStorage.setItem('dualtrack_custom_cats', JSON.stringify(userCategories));
     }
 
-    /* 동적 카테고리 필터 바 ('전체' 칩 포함) */
     function renderCategoryFilterBar() {
       const filterContainer = document.getElementById('filterRow');
       filterContainer.innerHTML = '';
 
-      // 1. 맨 앞에 '전체' 필터 칩 추가
       const allBtn = document.createElement('button');
       allBtn.className = `filter-chip ${currentFilter === '전체' ? 'active' : ''}`;
       allBtn.innerText = '전체';
@@ -565,7 +577,6 @@
       };
       filterContainer.appendChild(allBtn);
 
-      // 2. 사용자가 등록한 카테고리 칩들
       userCategories.forEach(cat => {
         const btn = document.createElement('button');
         btn.className = `filter-chip ${currentFilter === cat ? 'active' : ''}`;
@@ -578,14 +589,12 @@
         filterContainer.appendChild(btn);
       });
 
-      // 3. + 추가 버튼
       const addBtn = document.createElement('button');
       addBtn.className = 'filter-chip add-chip';
       addBtn.innerHTML = '<span>+ 추가</span>';
       addBtn.onclick = openCatModal;
       filterContainer.appendChild(addBtn);
 
-      // 일정 추가 모달 드롭다운 항목
       const selectModal = document.getElementById('modalCategory');
       selectModal.innerHTML = '';
       userCategories.forEach(cat => {
@@ -711,7 +720,6 @@
 
       const sortedTimes = Object.keys(dayData).sort();
 
-      // '전체'일 때는 모든 카테고리 표시, 특정 카테고리일 때는 해당 카테고리만 필터링
       const filteredKeys = sortedTimes.filter(key => {
         if (currentFilter === '전체') return true;
         return dayData[key].category === currentFilter;
@@ -768,9 +776,13 @@
       isCreatingNew = true;
       editingSlotKey = null;
       document.getElementById('modalTitle').innerText = '새 일정 추가';
-      document.getElementById('modalStartTime').value = '09:00';
-      document.getElementById('modalEndTime').value = '10:00';
-      // '전체' 필터 상태이면 첫 번째 카테고리로 기본 선택
+      
+      // 기본값 설정 (09:00 ~ 10:00)
+      document.getElementById('modalStartHour').value = '09';
+      document.getElementById('modalStartMin').value = '00';
+      document.getElementById('modalEndHour').value = '10';
+      document.getElementById('modalEndMin').value = '00';
+
       const defaultCat = currentFilter === '전체' ? (userCategories[0] || '문화부') : currentFilter;
       document.getElementById('modalCategory').value = defaultCat;
       document.getElementById('modalPlan').value = '';
@@ -786,8 +798,16 @@
       const slot = dbData[dateStr][key];
 
       document.getElementById('modalTitle').innerText = `일정 수정`;
-      document.getElementById('modalStartTime').value = slot.startTime || '09:00';
-      document.getElementById('modalEndTime').value = slot.endTime || '10:00';
+      
+      // 기존 시간 파싱 후 드롭다운 세팅
+      const [sh, sm] = (slot.startTime || '09:00').split(':');
+      const [eh, em] = (slot.endTime || '10:00').split(':');
+
+      document.getElementById('modalStartHour').value = sh || '09';
+      document.getElementById('modalStartMin').value = sm || '00';
+      document.getElementById('modalEndHour').value = eh || '10';
+      document.getElementById('modalEndMin').value = em || '00';
+
       document.getElementById('modalCategory').value = slot.category;
       document.getElementById('modalPlan').value = slot.plan;
       document.getElementById('modalActual').value = slot.actual || '';
@@ -799,8 +819,15 @@
 
     function saveModal() {
       const dateStr = getFormattedDate(selectedDate);
-      const startTime = document.getElementById('modalStartTime').value;
-      const endTime = document.getElementById('modalEndTime').value;
+      
+      const sh = document.getElementById('modalStartHour').value;
+      const sm = document.getElementById('modalStartMin').value;
+      const eh = document.getElementById('modalEndHour').value;
+      const em = document.getElementById('modalEndMin').value;
+
+      const startTime = `${sh}:${sm}`;
+      const endTime = `${eh}:${em}`;
+
       const catVal = document.getElementById('modalCategory').value;
       const planVal = document.getElementById('modalPlan').value.trim();
       const actualVal = document.getElementById('modalActual').value.trim();
