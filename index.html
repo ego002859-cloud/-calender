@@ -487,7 +487,7 @@
       
       <div class="form-group">
         <label class="form-label">새 카테고리 이름</label>
-        <input type="text" class="form-input" id="newCatInput" placeholder="예: 외주편집, 개인운동 등">
+        <input type="text" class="form-input" id="newCatInput" placeholder="예: 독서, 회의 등">
       </div>
       <button class="btn-primary" style="margin-bottom: 16px;" onclick="addCategory()">+ 카테고리 추가</button>
 
@@ -526,7 +526,8 @@
 
     let selectedDate = new Date();
     let dbData = JSON.parse(localStorage.getItem('dualtrack_clean_empty_db')) || {};
-    let userCategories = JSON.parse(localStorage.getItem('dualtrack_custom_cats')) || ['문화부', 'acut'];
+    // 기본 카테고리 설정 ('개인', '업무', '운동')
+    let userCategories = JSON.parse(localStorage.getItem('dualtrack_custom_cats')) || ['개인', '업무', '운동'];
     let currentFilter = '전체';
 
     let editingSlotKey = null;
@@ -783,7 +784,7 @@
       document.getElementById('modalEndHour').value = '10';
       document.getElementById('modalEndMin').value = '00';
 
-      const defaultCat = currentFilter === '전체' ? (userCategories[0] || '문화부') : currentFilter;
+      const defaultCat = currentFilter === '전체' ? (userCategories[0] || '개인') : currentFilter;
       document.getElementById('modalCategory').value = defaultCat;
       document.getElementById('modalPlan').value = '';
       document.getElementById('modalActual').value = '';
